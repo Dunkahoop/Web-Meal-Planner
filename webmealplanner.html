@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weekly Meal Planner</title>
+</head>
+<body>
+    <h1>Weekly Meal Planner</h1>
+    <h2>Recipe List</h2>
+    <input id="key" type="text" placeholder="Recipe Name">
+    <input id="value" type="text" placeholder="Enter value">
+    <button onclick="addRecipe()">Add Recipe</button>
+    <p id="demo"></p>
+    <select name="options" id="options">
+      </select>
+      <button onclick="deleteRecipe()">Delete Recipe</button>
+    <script>
+        // Load data from local storage or use default data
+        var data = JSON.parse(localStorage.getItem('recipes')) || {};
+
+        // Get select element
+        var select = document.getElementById('options');
+
+        // Populate select element with keys of JSON object
+        for (var key in data) {
+            var option = document.createElement('option');
+            option.text = key;
+            select.add(option);
+        }
+
+        function addRecipe() {
+            // Get input values
+            var key = document.getElementById('key').value;
+            var value = document.getElementById('value').value;
+
+            // Add new data
+            data[key] = value;
+
+            // Save data to local storage
+            localStorage.setItem('recipes', JSON.stringify(data));
+
+            // Update paragraph
+            document.getElementById('demo').innerHTML = JSON.stringify(data, null, 2);
+
+            document.getElementById('key').value = '';
+            document.getElementById('value').value = '';
+        }
+
+        function deleteRecipe() {
+            var options = document.getElementById('options');
+            var badRecipe = options.options[options.selectedIndex].value;
+            localStorage.removeItem(badRecipe);
+        }
+
+        // Initial display of data
+        document.getElementById('demo').innerHTML = JSON.stringify(data, null, 2);
+    </script>
+</body>
+</html>
