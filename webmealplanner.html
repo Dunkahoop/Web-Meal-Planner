@@ -1,7 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weekly Meal Planner</title>
+    <link rel="stylesheet" href="style.css">
+    
   </head>
   <body>
     <h1>Weekly Meal Planner</h1>
@@ -14,21 +18,40 @@
     </div>
     <h2>Recipe List</h2>
     <p id="demo"></p>
+    <h3>Select Recipe</h3>
+    <select name="options" id="options" title="options"></select>
     <div id="delete">
       <h2>Delete Recipe</h2>
-      <select name="options" id="options"></select>
+      
       <button onclick="deleteRecipe()">Delete Recipe</button>
     </div>
     <p></p>
     <div id="edit">
       <h2>Edit Recipe</h2>
-      <select name="options" id="options1"></select>
     </div>
     <div>
       <h2>Add Recipe Ingredients</h2>
-      <select name="options" id="options2"></select>
       <input id="ingredient" type="text" placeholder="Ingredient"/>
+      <button onclick="addIngredient()">Add Ingredient</button>
     </div>
+    </p>
+    <div class="planner">
+        <div class="day">Monday</div>
+        <div class="day">Tuesday</div>
+        <div class="day">Wednesday</div>
+        <div class="day">Thursday</div>
+        <div class="day">Friday</div>
+        <div class="day">Saturday</div>
+        <div class="day">Sunday</div>
+        <div class="day">Task 1</div>
+        <div class="day">Task 2</div>
+        <div class="day">Task 3</div>
+        <div class="day">Task 4</div>
+        <div class="day">Task 5</div>
+        <div class="day">Task 6</div>
+        <div class="day">Task 7</div>
+    </div>
+
     <script type="text/javascript" src="script.js"></script>
   </body>
 </html>

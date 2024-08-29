@@ -4,23 +4,12 @@ var data = JSON.parse(localStorage.getItem("recipes")) || {};
 // Get select element
 var select = document.getElementById("options");
 
-// //clone dropdowns for other menus
-// var clonedDropdown1 = select.cloneNode(true);
-// var clonedDropdown2 = select.cloneNode(true);
-
-// clonedDropdown1.value = select.value;
-// clonedDropdown2.value = select.value;
-
-//document.getElementById("options1").appendChild(clonedDropdown1);
-//document.getElementById("options2").appendChild(clonedDropdown2)
-
-// Populate select element with keys of JSON object
 updateOptions();
 
 function updateOptions() {
   // Clear existing options in the dropdown
-  while (options.firstChild) {
-    options.removeChild(options.firstChild);
+  while (select.firstChild) {
+    select.removeChild(select.firstChild);
   }
 
   // Populate select element with keys of JSON object
@@ -28,8 +17,6 @@ function updateOptions() {
     var option = document.createElement("option");
     option.text = key;
     select.add(option);
-    //clonedDropdown1.add(option);
-    //clonedDropdown2.add(option);
   }
 }
 
@@ -39,57 +26,73 @@ function addRecipe() {
   var value = document.getElementById("value").value;
 
   // Add new data
-  data[key] = value;
+  if(key && value)
+  data[key] = { website: value, ingredients: [] };
 
   // Save data to local storage
   localStorage.setItem("recipes", JSON.stringify(data));
 
   // Update paragraph
-  document.getElementById("demo").innerHTML = JSON.stringify(
-    data,
-    null,
-    2
-  );
+  document.getElementById("demo").innerHTML = JSON.stringify(data, null, 2);
 
   document.getElementById("key").value = "";
   document.getElementById("value").value = "";
 
-  // Clear existing options in the dropdown
-  while (options.firstChild) {
-    options.removeChild(options.firstChild);
-  }
+  updateOptions();
 
-  // Populate select element with keys of JSON object
-  for (var key in data) {
-    var option = document.createElement("option");
-    option.text = key;
-    select.add(option);
-  }
+  // // Clear existing options in the dropdown
+  // while (options.firstChild) {
+  //   options.removeChild(options.firstChild);
+  // }
+
+  // // Populate select element with keys of JSON object
+  // for (var key in data) {
+  //   var option = document.createElement("option");
+  //   option.text = key;
+  //   select.add(option);
+  // }
 }
 
 function deleteRecipe() {
-  //var options = document.getElementById("options");
-  var badRecipe = options.options[options.selectedIndex].text;
+  var options = document.getElementById("options");
+  var badRecipe = options.value;
   //localStorage.removeItem(badRecipe);
   delete data[badRecipe]; // Remove the recipe from the data object
   localStorage.setItem("recipes", JSON.stringify(data)); // Save the updated data
-  document.getElementById("demo").innerHTML = JSON.stringify(
-    data,
-    null,
-    2
-  ); // Update the display
+  document.getElementById("demo").innerHTML = JSON.stringify(data, null, 2); // Update the display
 
-  // Clear existing options in the dropdown
-  while (options.firstChild) {
-    options.removeChild(options.firstChild);
-  }
+  updateOptions();
 
-  //update dropdown menu
-  for (var key in data) {
-    var option = document.createElement("option");
-    option.text = key;
-    select.add(option);
-  }
+  // // Clear existing options in the dropdown
+  // while (options.firstChild) {
+  //   options.removeChild(options.firstChild);
+  // }
+
+  // //update dropdown menu
+  // for (var key in data) {
+  //   var option = document.createElement("option");
+  //   option.text = key;
+  //   select.add(option);
+  // }
+}
+
+function addIngredient() {
+  var options = document.getElementById("options");
+  var ingredient = document.getElementById("ingredient").value;
+
+  // Add new data
+  if(ingredient) //ensure data is actually in box
+  data[options.value].ingredients.push(ingredient);
+
+  // Save data to local storage
+  localStorage.setItem("recipes", JSON.stringify(data));
+
+  // Update paragraph
+  document.getElementById("demo").innerHTML = JSON.stringify(data, null, 2);
+
+  document.getElementById("ingredient").value = "";
+
+  updateOptions();
 }
 
 // Initial display of data
