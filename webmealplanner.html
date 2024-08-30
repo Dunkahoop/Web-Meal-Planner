@@ -18,8 +18,12 @@
     </div>
     <h2>Recipe List</h2>
     <p id="demo"></p>
+    <h2>Ingredient List</h2>
+    <p id="ingredients"></p>
     <h3>Select Recipe</h3>
     <select name="options" id="options" title="options"></select>
+    <h3>Select Ingredient</h3>
+    <select name="ingredientList" id="ingredientList" title="ingredientList"></select>
     <div id="delete">
       <h2>Delete Recipe</h2>
       
@@ -27,11 +31,13 @@
     </div>
     <p></p>
     <div id="edit">
-      <h2>Edit Recipe</h2>
+      <h2>Add to Grocery List</h2>
+      <!-- <button onclick="addtoList()">Add Ingredient</button> -->
     </div>
     <div>
       <h2>Add Recipe Ingredients</h2>
       <input id="ingredient" type="text" placeholder="Ingredient"/>
+      <input id="quantity" type="text" placeholder="Quantity"/>
       <button onclick="addIngredient()">Add Ingredient</button>
     </div>
     </p>
