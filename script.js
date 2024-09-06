@@ -10,13 +10,13 @@ var ingreList = document.getElementById("ingredientList");
 var totalItems = 0;//used as counter to stop program when no more items in grocery list
 
 var dayList = [
-  ["day1", "meal1", "web1"],
-  ["day2", "meal2", "web2"],
-  ["day3", "meal3", "web3"],
-  ["day4", "meal4", "web4"],
-  ["day5", "meal5", "web5"],
-  ["day6", "meal6", "web6"],
-  ["day7", "meal7", "web7"],
+  ["meal1", "web1"],
+  ["meal2", "web2"],
+  ["meal3", "web3"],
+  ["meal4", "web4"],
+  ["meal5", "web5"],
+  ["meal6", "web6"],
+  ["meal7", "web7"],
 ];
 
 updateOptions();
@@ -51,7 +51,7 @@ function addRecipe() {
   var value = document.getElementById("value").value;
 
   // Add new recipes
-  if (key && value) recipes[key] = { website: value, ingredients: [] };
+  if (key && value) recipes[key] = { name: key, website: value, ingredients: [] };
 
   // Save recipes to local storage
   localStorage.setItem("recipes", JSON.stringify(recipes));
@@ -140,9 +140,15 @@ function addToList() {
 //TODO: get this working!
 function genMealPlan() {
   //TODO: add loop that either runs 7 times or through dayList
+
+  //selects key of random recipe
+  //https://stackoverflow.com/questions/30061969/select-random-object-from-json
   var obj_keys = Object.keys(recipes);
   var rand_key = obj_keys[Math.floor(Math.random() * obj_keys.length)];
-  //https://stackoverflow.com/questions/30061969/select-random-object-from-json
+  
+
+  document.getElementById("meal1").innerHTML = recipes[rand_key].name;
+  document.getElementById("web1").innerHTML = "<a href=" + recipes[rand_key].website + " target=\"_blank\">Website</a>";
 }
 
 
