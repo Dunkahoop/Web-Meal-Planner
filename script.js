@@ -1,3 +1,8 @@
+//Clear session storage
+window.onbeforeunload = function () {
+  sessionStorage.clear();
+};
+
 // Load recipes and ingredients from local storage or use default recipes
 var recipes = JSON.parse(localStorage.getItem("recipes")) || {};
 var ingredients = JSON.parse(localStorage.getItem("ingredients")) || {};
@@ -7,9 +12,9 @@ var groceryList = JSON.parse(sessionStorage.getItem("groceryList")) || {};
 var select = document.getElementById("options");
 var ingreList = document.getElementById("ingredientList");
 
-var totalItems = 0;//used as counter to stop program when no more items in grocery list
+var totalItems = 0; //used as counter to stop program when no more items in grocery list
 
-var dayList = [
+const dayList = [
   ["meal1", "web1"],
   ["meal2", "web2"],
   ["meal3", "web3"],
@@ -51,7 +56,8 @@ function addRecipe() {
   var value = document.getElementById("value").value;
 
   // Add new recipes
-  if (key && value) recipes[key] = { name: key, website: value, ingredients: [] };
+  if (key && value)
+    recipes[key] = { name: key, website: value, ingredients: [] };
 
   // Save recipes to local storage
   localStorage.setItem("recipes", JSON.stringify(recipes));
@@ -135,27 +141,72 @@ function addToList() {
   sessionStorage.setItem("groceryList", JSON.stringify(groceryList, null, 2));
 
   document.getElementById("listQuantity").value = "";
+
+  document.getElementById("groceries").innerHTML = JSON.stringify(
+    groceryList,
+    null,
+    2
+  );
 }
 
-//TODO: get this working!
+//TODO: ensure it goes through all recipes before calling it quits?
 function genMealPlan() {
-  //TODO: add loop that either runs 7 times or through dayList
+  if (totalItems === 0) return;
 
-  //selects key of random recipe
-  //https://stackoverflow.com/questions/30061969/select-random-object-from-json
+  // Selects key of random recipe
   var obj_keys = Object.keys(recipes);
-  var rand_key = obj_keys[Math.floor(Math.random() * obj_keys.length)];
-  
 
-  document.getElementById("meal1").innerHTML = recipes[rand_key].name;
-  document.getElementById("web1").innerHTML = "<a href=" + recipes[rand_key].website + " target=\"_blank\">Website</a>";
+  // Iterate through the dayList array
+  //random code from:
+  //https://stackoverflow.com/questions/30061969/select-random-object-from-json
+  for (var i = 0; i < dayList.length; i++) {
+    let passed = false; //ensures all ingredients are in grocery list
+
+    //get random recipe
+    //TODO:
+    //-put this and other code in a while loop, runs until no more recipes left
+    //-tick off recipes when cannot be made
+    var rand_key = obj_keys[Math.floor(Math.random() * obj_keys.length)];
+    
+    //elements in 2d array for display
+    var mealId = dayList[i][0];
+    var webId = dayList[i][1];
+
+    var currentRecipe = recipes[rand_key];//reicpe randomly selected
+    var ingredients = currentRecipe.ingredients;//ingredients in recipe
+    for (var j = 0; j < ingredients.length; j++) {//look through all ingredients
+      var ingredient = ingredients[j];
+      if (groceryList[ingredient.name] && totalItems > 0) {//check if ingredient is in list and ensure list is not empty (may have entied from past days, may need to move up more)
+        console.log(ingredient.name + " is in the grocery list.");
+        totalItems -= ingredient.quantity;//deduct ingredient count from total count
+        //todo: ensure deductions are made after all ingredients are verified
+      } else {//break loop if ingredient not in list or items run out
+        break;
+      }
+
+      passed = true;
+    }
+
+    //render meal for day with website link
+    if (passed) {
+      document.getElementById(mealId).innerHTML = recipes[rand_key].name;
+      document.getElementById(webId).innerHTML =
+        '<a href="' +
+        recipes[rand_key].website +
+        '" target="_blank">Website</a>';
+    }
+  }
 }
-
 
 // Initial display of recipes
 document.getElementById("demo").innerHTML = JSON.stringify(recipes, null, 2);
 document.getElementById("ingredients").innerHTML = JSON.stringify(
   ingredients,
+  null,
+  2
+);
+document.getElementById("groceries").innerHTML = JSON.stringify(
+  groceryList,
   null,
   2
 );
