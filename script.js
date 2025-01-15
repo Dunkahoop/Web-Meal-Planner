@@ -26,7 +26,11 @@ const dayList = [
 
 updateOptions();
 
-function updateOptions() {
+function updateOptions(selectValue = null,  ingreListValue = null) {
+  // Store the initial values
+  //var initialSelectValue = select.value;
+  //var initialIngreListValue = ingreList.value;
+
   // Clear existing options in the dropdowns
   while (select.firstChild) {
     select.removeChild(select.firstChild);
@@ -48,7 +52,12 @@ function updateOptions() {
     option.text = key;
     ingreList.add(option);
   }
+
+  // Set the value back to the initial value or the top value if it didn't have an initial value
+  select.value = selectValue || select.options[select.options.length - 1].value;
+  ingreList.value = ingreListValue || ingreList.options[0].value;
 }
+
 
 function addRecipe() {
   // Get input values
@@ -56,19 +65,24 @@ function addRecipe() {
   var value = document.getElementById("value").value;
 
   // Add new recipes
-  if (key && value)
+  if (key && value && !recipes[key]) {
     recipes[key] = { name: key, website: value, ingredients: [] };
 
-  // Save recipes to local storage
-  localStorage.setItem("recipes", JSON.stringify(recipes));
+    // Save recipes to local storage
+    localStorage.setItem("recipes", JSON.stringify(recipes));
 
-  // Update paragraph
-  document.getElementById("demo").innerHTML = JSON.stringify(recipes, null, 2);
+    // Update paragraph
+    document.getElementById("demo").innerHTML = JSON.stringify(
+      recipes,
+      null,
+      2
+    );
 
-  document.getElementById("key").value = "";
-  document.getElementById("value").value = "";
+    document.getElementById("key").value = "";
+    document.getElementById("value").value = "";
 
-  updateOptions();
+    updateOptions(key);
+  }
 }
 
 function deleteRecipe() {
@@ -98,19 +112,26 @@ function deleteIngredient() {
 }
 
 function addIngredient() {
+  //const unitForm = document.getElementById("unit").value;
+
   var options = document.getElementById("options");
   var ingredient = document.getElementById("ingredient").value;
   var quantity = document.getElementById("quantity").value;
+  //var unit = unitForm.elements['measurements'].value;
 
   // Add new recipes
   if (ingredient && quantity)
     //ensure recipes is actually in box
     recipes[options.value].ingredients.push({
       name: ingredient,
-      quantity: quantity,
+      quantity: quantity
     });
 
-  if (!ingredients[ingredient]) ingredients[ingredient] = ingredient;
+    //TODO: ensure user can't add numbers as ingredient name
+  if (!ingredients[ingredient]) ingredients.push({
+   name: ingredient,
+   //unit: unit,
+  })
 
   // Save recipes and ingredients to local storage
   localStorage.setItem("recipes", JSON.stringify(recipes));
@@ -128,6 +149,11 @@ function addIngredient() {
   document.getElementById("quantity").value = "";
 
   updateOptions();
+}
+
+function getQuantity(amount = 0, unit = null) {
+  //this is supposed to boil down the quantity of an ingredient based on the unit specified
+  //use a switch statement
 }
 
 function addToList() {
@@ -153,6 +179,9 @@ function addToList() {
 function genMealPlan() {
   if (totalItems === 0) return;
 
+  //TODO: save what's left of grocery list, add boolean flag cookie to determine if it was used before
+  //also change flag back first thing, so it occurs on refresh
+
   // Selects key of random recipe
   var obj_keys = Object.keys(recipes);
 
@@ -167,20 +196,23 @@ function genMealPlan() {
     //-put this and other code in a while loop, runs until no more recipes left
     //-tick off recipes when cannot be made
     var rand_key = obj_keys[Math.floor(Math.random() * obj_keys.length)];
-    
+
     //elements in 2d array for display
     var mealId = dayList[i][0];
     var webId = dayList[i][1];
 
-    var currentRecipe = recipes[rand_key];//reicpe randomly selected
-    var ingredients = currentRecipe.ingredients;//ingredients in recipe
-    for (var j = 0; j < ingredients.length; j++) {//look through all ingredients
+    var currentRecipe = recipes[rand_key]; //reicpe randomly selected
+    var ingredients = currentRecipe.ingredients; //ingredients in recipe
+    for (var j = 0; j < ingredients.length; j++) {
+      //look through all ingredients
       var ingredient = ingredients[j];
-      if (groceryList[ingredient.name] && totalItems > 0) {//check if ingredient is in list and ensure list is not empty (may have entied from past days, may need to move up more)
+      if (groceryList[ingredient.name] && totalItems > 0) {
+        //check if ingredient is in list and ensure list is not empty (may have entied from past days, may need to move up more)
         console.log(ingredient.name + " is in the grocery list.");
-        totalItems -= ingredient.quantity;//deduct ingredient count from total count
+        totalItems -= ingredient.quantity; //deduct ingredient count from total count
         //todo: ensure deductions are made after all ingredients are verified
-      } else {//break loop if ingredient not in list or items run out
+      } else {
+        //break loop if ingredient not in list or items run out
         break;
       }
 

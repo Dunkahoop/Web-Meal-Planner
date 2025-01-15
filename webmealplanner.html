@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weekly Meal Planner</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <h1>Weekly Meal Planner</h1>
     <p>IMPORTANT!</p>
-    <p>The value of Quantity is ultimately up to how you use the app. Since many units of measurement are used for cooking, I recommend judging how many uses a package of ingredients typically gets you during regular cooking when inputting your grocery list.</p>
+    <p>
+      The value of Quantity is ultimately up to how you use the app. Since many
+      units of measurement are used for cooking, I recommend judging how many
+      uses a package of ingredients typically gets you during regular cooking
+      when inputting your grocery list.
+    </p>
     <!-- <p>Also, to redo the plan with an empty grocery list, you need to close the page and reopen it. Please let me know if this is unintuitive, as I can add a feature where it clears upon refreshing the page.</p> -->
     <div id="add">
       <h2>Add Recipe</h2>
@@ -26,7 +31,11 @@
     <h3>Select Recipe</h3>
     <select name="options" id="options" title="options"></select>
     <h3>Select Ingredient</h3>
-    <select name="ingredientList" id="ingredientList" title="ingredientList"></select>
+    <select
+      name="ingredientList"
+      id="ingredientList"
+      title="ingredientList"
+    ></select>
     <div id="delete">
       <h2>Delete Recipe</h2>
       <button onclick="deleteRecipe()">Delete Recipe</button>
@@ -36,42 +45,70 @@
     <p></p>
     <div id="edit">
       <h2>Add to Grocery List</h2>
-      <input id="listQuantity" type="text" placeholder="Quantity"/>
+      <input id="listQuantity" type="text" placeholder="Quantity" />
       <button onclick="addToList()">Add Ingredient</button>
     </div>
     <div>
-      <h2>Add Recipe Ingredients</h2>
-      <input id="ingredient" type="text" placeholder="Ingredient"/>
-      <input id="quantity" type="text" placeholder="Quantity"/>
+      <h2>Add Ingredient to Storage</h2>
+      <input id="ingredient" type="text" placeholder="Ingredient" />
+      <br><br />
+      <input id="quantity" type="text" placeholder="Total Quantity" />
+      <!-- <form>
+        <input type="radio" id="cups" name="unit" value="cups" />
+        <label for="cups">Cups</label><br />
+        <input type="radio" id="tablespoons" name="unit" value="tablespoons" />
+        <label for="tablespoons">Tablespoons (tbsp)</label><br />
+        <input type="radio" id="teaspoons" name="unit" value="teaspoons" />
+        <label for="teaspoons">Teaspoons (tsp)</label><br />
+        <input type="radio" id="grams" name="unit" value="grams" />
+        <label for="grams">Grams (g)</label><br />
+        <input type="radio" id="milliliters" name="unit" value="milliliters" />
+        <label for="milliliters">Milliliters (ml)</label><br />
+        <input type="radio" id="ounces" name="unit" value="ounces" />
+        <label for="ounces">Ounces (oz)</label><br />
+        <input type="radio" id="liters" name="unit" value="liters" />
+        <label for="liters">Liters (l)</label><br />
+        <input type="radio" id="pounds" name="unit" value="pounds" />
+        <label for="pounds">Pounds (lbs)</label><br />
+        <input type="radio" id="kilograms" name="unit" value="kilograms" />
+        <label for="kilograms">Kilograms (kg)</label><br />
+        <input type="submit" value="Submit" />
+      </form> -->
+      <br><br />
       <button onclick="addIngredient()">Add Ingredient</button>
     </div>
+    <!-- <div>
+      <h2>Add Ingredient to Recipe</h2>
+      <input id="ingredient" type="text" placeholder="Ingredient" />
+      <input id="quantity" type="text" placeholder="Quantity for Recipe" />
+      <button onclick="addIngredient()">Add Ingredient</button>
+    </div> -->
     <div>
       <h2>Generate Meal Plan</h2>
       <button onclick="genMealPlan()">Generate</button>
     </div>
-    </p>
     <div class="planner">
-        <div class="day">Sunday</div>
-        <div class="day">Monday</div>
-        <div class="day">Tuesday</div>
-        <div class="day">Wednesday</div>
-        <div class="day">Thursday</div>
-        <div class="day">Friday</div>
-        <div class="day">Saturday</div>
-        <div class="day" id="meal1"></div>
-        <div class="day" id="meal2"></div>
-        <div class="day" id="meal3"></div>
-        <div class="day" id="meal4"></div>
-        <div class="day" id="meal5"></div>
-        <div class="day" id="meal6"></div>
-        <div class="day" id="meal7"></div>
-        <div class="day" id="web1"></div>
-        <div class="day" id="web2"></div>
-        <div class="day" id="web3"></div>
-        <div class="day" id="web4"></div>
-        <div class="day" id="web5"></div>
-        <div class="day" id="web6"></div>
-        <div class="day" id="web7"></div>
+      <div class="day">Sunday</div>
+      <div class="day">Monday</div>
+      <div class="day">Tuesday</div>
+      <div class="day">Wednesday</div>
+      <div class="day">Thursday</div>
+      <div class="day">Friday</div>
+      <div class="day">Saturday</div>
+      <div class="day" id="meal1"></div>
+      <div class="day" id="meal2"></div>
+      <div class="day" id="meal3"></div>
+      <div class="day" id="meal4"></div>
+      <div class="day" id="meal5"></div>
+      <div class="day" id="meal6"></div>
+      <div class="day" id="meal7"></div>
+      <div class="day" id="web1"></div>
+      <div class="day" id="web2"></div>
+      <div class="day" id="web3"></div>
+      <div class="day" id="web4"></div>
+      <div class="day" id="web5"></div>
+      <div class="day" id="web6"></div>
+      <div class="day" id="web7"></div>
     </div>
 
     <script type="text/javascript" src="script.js"></script>
