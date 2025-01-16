@@ -1,3 +1,5 @@
+//TODO: add more warnings for incorrect input, pop up warnings
+
 //Clear session storage
 window.onbeforeunload = function () {
   sessionStorage.clear();
@@ -26,7 +28,23 @@ const dayList = [
 
 updateOptions();
 
-function updateOptions(selectValue = null,  ingreListValue = null) {
+function toggleElements() {
+  const form = document.getElementById("toggleForm");
+  const selectedOption = form.elements["toggle"].value;
+
+  /*TODO: do something like this for the toggling:
+  const content = document.getElementById('content'); 
+  if (selectedOption === 'show') { 
+  content.classList.remove('hidden'); 
+  } 
+  else if (selectedOption === 'hide') 
+   { 
+  content.classList.add('hidden');
+    }
+  */
+}
+
+function updateOptions(selectValue = null, ingreListValue = null) {
   // Store the initial values
   //var initialSelectValue = select.value;
   //var initialIngreListValue = ingreList.value;
@@ -58,8 +76,8 @@ function updateOptions(selectValue = null,  ingreListValue = null) {
   ingreList.value = ingreListValue || ingreList.options[0].value;
 }
 
-
 function addRecipe() {
+  //TODO?: add number value for array?
   // Get input values
   var key = document.getElementById("key").value;
   var value = document.getElementById("value").value;
@@ -112,26 +130,56 @@ function deleteIngredient() {
 }
 
 function addIngredient() {
-  //const unitForm = document.getElementById("unit").value;
+  //TODO?: add number value for array?
+  /* 
+  Me:
+  I'm at a loss here. I'm building an application that will automatically determine a meal plan for a week based on recipes added by the user, with the meal plan itself being determined by the user entering in foods they bought. 
+  To account for the foods being used up, the app assigns a quantity to the ingredients purchased and deducts the amount needed for the recipe selected. 
+  However, with all the different units of measurement used for the ingredients, I need to quantify it all into a number that can be decuted without having to deal with unit conversions, avoiding added complexity. 
+  I've been struggling to approach this, especially with doing it in a way that won't confuse the user. Any ideas?
+
+  Bing AI:
+  I see where you're coming from. Dealing with different units of measurement can be a real headache. Here's an idea that might help simplify things:
+
+  Standardize Units: Choose a single unit of measurement for each type of ingredient. For example, you could use grams for solids and milliliters for liquids. This way, you only need to convert the quantities once when the user inputs their grocery list.
+
+  Conversion Table: Create a conversion table within your app that automatically converts common units to your standardized units. For example, if a recipe calls for 1 cup of flour, the app would convert that to grams based on your conversion table.
+
+  User-Friendly Input: Allow users to input ingredients in their preferred units, but display the standardized units in the background. This way, users can continue to use familiar measurements without getting confused by the conversions.
+
+  Ingredient Database: Maintain a database of common ingredients with their standardized quantities. When a user adds a recipe, the app can automatically pull the standardized quantities from the database.
+
+  Visual Feedback: Provide visual feedback to users when they input ingredients. For example, if they enter "1 cup of flour," show them the equivalent in grams next to it. This helps users understand the conversion without feeling overwhelmed.
+
+  Recipe Scaling: If a user wants to scale a recipe up or down, the app can use the standardized units to adjust the quantities accordingly. This ensures consistency and accuracy.
+
+  By implementing these steps, you can simplify the process for users and avoid the complexity of dealing with multiple units of measurement. What do you think?
+  */
+
+  const unitForm = document.getElementById("units");
 
   var options = document.getElementById("options");
   var ingredient = document.getElementById("ingredient").value;
   var quantity = document.getElementById("quantity").value;
-  //var unit = unitForm.elements['measurements'].value;
+  var unit = unitForm.elements["unit"].value;
 
   // Add new recipes
   if (ingredient && quantity)
     //ensure recipes is actually in box
     recipes[options.value].ingredients.push({
       name: ingredient,
-      quantity: quantity
+      quantity: quantity,
+      unit: unit,
     });
 
-    //TODO: ensure user can't add numbers as ingredient name
-  if (!ingredients[ingredient]) ingredients.push({
-   name: ingredient,
-   //unit: unit,
-  })
+  //TODO: ensure user can't add numbers as ingredient name
+  if (!ingredients[ingredient])
+    ingredients[ingredient] = {
+      name: ingredient,
+      unit: unit,
+    };
+
+  console.log(ingredients[ingredient]);
 
   // Save recipes and ingredients to local storage
   localStorage.setItem("recipes", JSON.stringify(recipes));
