@@ -28,53 +28,120 @@ const dayList = [
 
 updateOptions();
 
+// function toggleElements() {
+//   const form = document.getElementById("toggleForm");
+//   const selectedOption = form.elements["toggle"].value;
+
+//   const recipeSelect = document.getElementById('recipeSelect');
+//   const ingredientSelect = document.getElementById('ingredientSelect');
+//   const addRecipe = document.getElementById('addRecipe');
+//   const deleteRecipe = document.getElementById('deleteRecipe');
+//   const deleteIngredient = document.getElementById('deleteIngredient');
+//   const addList = document.getElementById('addList');
+//   const addIngredient = document.getElementById('addIngredient');
+
+//   switch (selectedOption) {
+//   case 'recipeSelect':
+//   case 'ingredientSelect':
+//   case 'addRecipe':
+//   case 'deleteRecipe':
+//   case 'deleteIngredient':
+//   case 'addList':
+//   case 'addIngredient':
+//   }
+// }
+
 function toggleElements() {
   const form = document.getElementById("toggleForm");
   const selectedOption = form.elements["toggle"].value;
 
-  /*TODO: do something like this for the toggling:
-  const content = document.getElementById('content'); 
-  if (selectedOption === 'show') { 
-  content.classList.remove('hidden'); 
-  } 
-  else if (selectedOption === 'hide') 
-   { 
-  content.classList.add('hidden');
-    }
-  */
+  const elements = {
+      //recipeSelect: document.getElementById('recipeSelect'),
+      //ingredientSelect: document.getElementById('ingredientSelect'),
+      addRecipe: document.getElementById('addRecipe'),
+      deleteRecipe: document.getElementById('deleteRecipe'),
+      deleteIngredient: document.getElementById('deleteIngredient'),
+      addList: document.getElementById('addList'),
+      addIngredient: document.getElementById('addIngredient')
+  };
+
+  for (const key in elements) {
+      if (elements.hasOwnProperty(key)) {
+          elements[key].classList.toggle('hidden', key !== selectedOption);
+      }
+  }
 }
 
 function updateOptions(selectValue = null, ingreListValue = null) {
-  // Store the initial values
-  //var initialSelectValue = select.value;
-  //var initialIngreListValue = ingreList.value;
+  const selectElements = document.querySelectorAll('select');
 
-  // Clear existing options in the dropdowns
-  while (select.firstChild) {
-    select.removeChild(select.firstChild);
-  }
+  // Clear existing options in all dropdowns
+  selectElements.forEach(select => {
+      while (select.firstChild) {
+          select.removeChild(select.firstChild);
+      }
+  });
 
-  while (ingreList.firstChild) {
-    ingreList.removeChild(ingreList.firstChild);
-  }
-
-  // Populate select element with keys of JSON object
-  for (var key in recipes) {
-    var option = document.createElement("option");
-    option.text = key;
-    select.add(option);
-  }
-
-  for (var key in ingredients) {
-    var option = document.createElement("option");
-    option.text = key;
-    ingreList.add(option);
-  }
+  // Populate select elements with keys of JSON object
+  selectElements.forEach(select => {
+      for (var key in recipes) {
+          var option = document.createElement("option");
+          option.text = key;
+          select.add(option);
+      }
+  });
 
   // Set the value back to the initial value or the top value if it didn't have an initial value
-  select.value = selectValue || select.options[select.options.length - 1].value;
+  selectElements.forEach(select => {
+      select.value = selectValue || select.options[select.options.length - 1].value;
+  });
+
+  // Populate ingreList element with keys of JSON object
+  const ingreList = document.getElementById('ingredientList');
+  while (ingreList.firstChild) {
+      ingreList.removeChild(ingreList.firstChild);
+  }
+  for (var key in ingredients) {
+      var option = document.createElement("option");
+      option.text = key;
+      ingreList.add(option);
+  }
   ingreList.value = ingreListValue || ingreList.options[0].value;
 }
+
+
+
+// function updateOptions(selectValue = null, ingreListValue = null) {
+//   // Store the initial values
+//   //var initialSelectValue = select.value;
+//   //var initialIngreListValue = ingreList.value;
+
+//   // Clear existing options in the dropdowns
+//   while (select.firstChild) {
+//     select.removeChild(select.firstChild);
+//   }
+
+//   while (ingreList.firstChild) {
+//     ingreList.removeChild(ingreList.firstChild);
+//   }
+
+//   // Populate select element with keys of JSON object
+//   for (var key in recipes) {
+//     var option = document.createElement("option");
+//     option.text = key;
+//     select.add(option);
+//   }
+
+//   for (var key in ingredients) {
+//     var option = document.createElement("option");
+//     option.text = key;
+//     ingreList.add(option);
+//   }
+
+//   // Set the value back to the initial value or the top value if it didn't have an initial value
+//   select.value = selectValue || select.options[select.options.length - 1].value;
+//   ingreList.value = ingreListValue || ingreList.options[0].value;
+// }
 
 function addRecipe() {
   //TODO?: add number value for array?

@@ -18,23 +18,23 @@
     <!-- <p>Also, to redo the plan with an empty grocery list, you need to close the page and reopen it. Please let me know if this is unintuitive, as I can add a feature where it clears upon refreshing the page.</p> -->
     <form id="toggleForm">
       <label>
-        <input type="radio" name="toggle" value="show" onclick="toggleElements()">Add Recipe
+        <input type="radio" name="toggle" value="addRecipe" onclick="toggleElements()">Add Recipe
       </label>
       <br/>
       <label>
-        <input type="radio" name="toggle" value="show" onclick="toggleElements()">Add Ingredient
+        <input type="radio" name="toggle" value="addIngredient" onclick="toggleElements()">Add Ingredient
       </label>
       <br/>
       <label>
-        <input type="radio" name="toggle" value="show" onclick="toggleElements()">Delete Recipe
+        <input type="radio" name="toggle" value="deleteRecipe" onclick="toggleElements()">Delete Recipe
       </label>
       <br/>
       <label>
-        <input type="radio" name="toggle" value="show" onclick="toggleElements()">Delete Ingredient
+        <input type="radio" name="toggle" value="deleteIngredient" onclick="toggleElements()">Delete Ingredient
       </label>
       <br/>
       <label>
-        <input type="radio" name="toggle" value="show" onclick="toggleElements()">Add Ingredient to Grocery List
+        <input type="radio" name="toggle" value="addList" onclick="toggleElements()">Add Ingredient to Grocery List
       </label>
       <br/>
     </form>
@@ -46,8 +46,8 @@
     <p id="ingredients"></p>
     <h2>Grocery List</h2>
     <p id="groceries"></p>
-
-    <div id="recipeSelect">
+    <!--TODO: have these show up when they're needed, apparently can't have multiple of the same select-->
+    <!-- <div id="recipeSelect">
       <h3>Select Recipe</h3>
       <select name="options" id="options" title="options"></select>
     </div>
@@ -57,7 +57,7 @@
         name="ingredientList"
         id="ingredientList"
         title="ingredientList"
-      ></select>
+      ></select> -->
     </div>
     <div id="addRecipe">
       <h2>Add Recipe</h2>
@@ -67,30 +67,34 @@
     </div>
     <div id="deleteRecipe">
       <h2>Delete Recipe</h2>
+      <h3>Select Recipe</h3>
+      <select name="options" id="options" title="options"></select>
+      <br/><br/>
       <button onclick="deleteRecipe()">Delete Recipe</button>
     </div>
     <div id="deleteIngredient">
       <h2>Delete Ingredient</h2>
+      <h3>Select Ingredient</h3>
+      <select
+        name="ingredientList"
+        id="ingredientList"
+        title="ingredientList"
+      ></select>
+      <br /><br />
       <button onclick="deleteIngredient()">Delete Ingredient</button>
     </div>
     <p></p>
+    <!--TODO: add a delete from grocery list?-->
     <div id="addList">
       <h2>Add to Grocery List</h2>
+      <h3>Select Recipe</h3>
+      <select name="options" id="options" title="options"></select>
+      <br /><br />
       <input id="listQuantity" type="text" placeholder="Quantity" />
       <button onclick="addToList()">Add Ingredient</button>
-    </div>
-    <div id="addIngredient">
-      <h2>Add Ingredient to Storage</h2>
-      <input id="ingredient" type="text" placeholder="Ingredient" />
-      <br /><br />
-      <input id="quantity" type="text" placeholder="Total Quantity" />
-      <form id="units">
-        <input type="radio" id="cups" name="unit" value="cups" />
-        <label for="cups">Cups</label><br />
-        <input type="radio" id="tablespoons" name="unit" value="tablespoons" />
-        <label for="tablespoons">Tablespoons (tbsp)</label><br />
-        <input type="radio" id="teaspoons" name="unit" value="teaspoons" />
-        <label for="teaspoons">Teaspoons (tsp)</label><br />
+      <form>
+        <input type="radio" id="cups" name="unit" value="indiv" />
+        <label for="cups">Individual units</label><br />
         <input type="radio" id="grams" name="unit" value="grams" />
         <label for="grams">Grams (g)</label><br />
         <input type="radio" id="milliliters" name="unit" value="milliliters" />
@@ -103,6 +107,29 @@
         <label for="pounds">Pounds (lbs)</label><br />
         <input type="radio" id="kilograms" name="unit" value="kilograms" />
         <label for="kilograms">Kilograms (kg)</label><br />
+      </form>
+    </div>
+    <div id="addIngredient">
+      <h2>Add Ingredient</h2>
+      <h3>Select Ingredient</h3>
+      <select
+        name="ingredientList"
+        id="ingredientList"
+        title="ingredientList"
+      ></select>
+      <br /><br />
+      <input id="ingredient" type="text" placeholder="Ingredient" />
+      <br /><br />
+      <input id="quantity" type="text" placeholder="Total Quantity" />
+      <form id="units">
+        <input type="radio" id="cups" name="unit" value="units" />
+        <label for="cups">Individual units</label><br />
+        <input type="radio" id="cups" name="unit" value="cups" />
+        <label for="cups">Cups</label><br />
+        <input type="radio" id="tablespoons" name="unit" value="tablespoons" />
+        <label for="tablespoons">Tablespoons (tbsp)</label><br />
+        <input type="radio" id="teaspoons" name="unit" value="teaspoons" />
+        <label for="teaspoons">Teaspoons (tsp)</label><br />
       </form>
       <br /><br />
       <button onclick="addIngredient()">Add Ingredient</button>
