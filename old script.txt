@@ -26,7 +26,7 @@ const dayList = [
   ["meal7", "web7"],
 ];
 
-updateOptions();
+window.onload = populateSelectElements;
 
 function toggleElements() {
   const form = document.getElementById("toggleForm");
@@ -49,52 +49,83 @@ function toggleElements() {
   }
 }
 
-function updateOptions(selectValue = null, ingreListValue = null) {
-  const recipeSelectElements = document.querySelectorAll('select[name="recipeList"]');
-  const ingredientSelectElements = document.querySelectorAll('select[name="ingredientList"]');
-
-  // Clear existing options in all recipe select elements
-  recipeSelectElements.forEach(select => {
-      while (select.firstChild) {
-          select.removeChild(select.firstChild);
-      }
-  });
-
-  // Clear existing options in all ingredient select elements
-  ingredientSelectElements.forEach(select => {
-      while (select.firstChild) {
-          select.removeChild(select.firstChild);
-      }
-  });
-
-  // Populate recipe select elements with keys of recipes JSON object
-  recipeSelectElements.forEach(select => {
-      for (var key in recipes) {
-          var option = document.createElement("option");
-          option.text = key;
-          select.add(option);
-      }
-  });
-
-  // Populate ingredient select elements with keys of ingredients JSON object
-  ingredientSelectElements.forEach(select => {
-      for (var key in ingredients) {
-          var option = document.createElement("option");
-          option.text = key;
-          select.add(option);
-      }
-  });
-
-  // Set the value back to the initial value or the top value if it didn't have an initial value
-  recipeSelectElements.forEach(select => {
-      select.value = selectValue || select.options[0].value;
-  });
-
-  ingredientSelectElements.forEach(select => {
-      select.value = ingreListValue || ingreList.options[0].value;
-  });
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
+function populateSelectElements() {
+  const recipes = JSON.parse(getCookie('recipes') || '{}');
+  const ingredients = JSON.parse(getCookie('ingredients') || '{}');
+
+  const recipeList = document.getElementById('recipeList');
+  const ingredientList = document.getElementById('ingredientList');
+
+  // Clear existing options in the dropdowns
+  recipeList.innerHTML = '';
+  ingredientList.innerHTML = '';
+
+  // Populate recipeList with keys of ingredients JSON object
+  for (const key in ingredients) {
+      const option = document.createElement('option');
+      option.text = key;
+      recipeList.add(option);
+  }
+
+  // Populate ingredientList with keys of recipes JSON object
+  for (const key in recipes) {
+      const option = document.createElement('option');
+      option.text = key;
+      ingredientList.add(option);
+  }
+}
+
+// Call the function to populate the select elements on page load
+
+
+
+// function updateOptions(recipeListValue = null, ingreListValue = null) {
+//   // const selectElements = document.querySelectorAll('select');
+
+//   // // Clear existing options in all dropdowns
+//   // selectElements.forEach(select => {
+//   //     while (select.firstChild) {
+//   //         select.removeChild(select.firstChild);
+//   //     }
+//   // });
+
+//   // Populate select elements with keys of JSON object
+//   //selectElements.forEach(select => {
+//     const recipeList = document.getElementById('options');
+//     while (recipeList.firstChild) {
+//       recipeList.removeChild(recipeList.firstChild)
+//     }
+//       for (var key in recipes) {
+//           var option = document.createElement("option");
+//           option.text = key;
+//           recipeList.add(option);
+//       }
+//       recipeList.value = recipeListValue || recipeList.options[0].value;
+//   //});
+
+//   // Set the value back to the initial value or the top value if it didn't have an initial value
+//   // selectElements.forEach(select => {
+//   //     select.value = selectValue || select.options[0].value;
+//   // });
+
+//   // Populate ingreList element with keys of JSON object
+//   const ingreList = document.getElementById('ingredientList');
+//   while (ingreList.firstChild) {
+//       ingreList.removeChild(ingreList.firstChild);
+//   }
+//   for (var key in ingredients) {
+//       var option = document.createElement("option");
+//       option.text = key;
+//       ingreList.add(option);
+//   }
+//   ingreList.value = ingreListValue || ingreList.options[0].value;
+// }
 
 
 
@@ -153,7 +184,7 @@ function addRecipe() {
     document.getElementById("key").value = "";
     document.getElementById("value").value = "";
 
-    updateOptions(key);
+    populateSelectElements();
   }
 }
 
@@ -165,7 +196,7 @@ function deleteRecipe() {
   localStorage.setItem("recipes", JSON.stringify(recipes)); // Save the updated recipes
   document.getElementById("demo").innerHTML = JSON.stringify(recipes, null, 2); // Update the display
 
-  updateOptions();
+  populateSelectElements();
 }
 
 function deleteIngredient() {
@@ -180,7 +211,7 @@ function deleteIngredient() {
     2
   ); // Update the display
 
-  updateOptions();
+  populateSelectElements();
 }
 
 function addIngredient() {
@@ -250,7 +281,7 @@ function addIngredient() {
   document.getElementById("ingredient").value = "";
   document.getElementById("quantity").value = "";
 
-  updateOptions();
+  populateSelectElements();
 }
 
 function getQuantity(amount = 0, unit = null) {

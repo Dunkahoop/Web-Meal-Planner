@@ -6,7 +6,7 @@
     <title>Weekly Meal Planner</title>
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body>
+  <body onload="toggleElements()">
     <h1>Weekly Meal Planner</h1>
     <p>IMPORTANT!</p>
     <p>
@@ -18,7 +18,7 @@
     <!-- <p>Also, to redo the plan with an empty grocery list, you need to close the page and reopen it. Please let me know if this is unintuitive, as I can add a feature where it clears upon refreshing the page.</p> -->
     <form id="toggleForm">
       <label>
-        <input type="radio" name="toggle" value="addRecipe" onclick="toggleElements()">Add Recipe
+        <input type="radio" name="toggle" value="addRecipe" checked="checked" onclick="toggleElements()">Add Recipe
       </label>
       <br/>
       <label>
@@ -46,49 +46,16 @@
     <p id="ingredients"></p>
     <h2>Grocery List</h2>
     <p id="groceries"></p>
-    <!--TODO: have these show up when they're needed, apparently can't have multiple of the same select-->
-    <!-- <div id="recipeSelect">
-      <h3>Select Recipe</h3>
-      <select name="options" id="options" title="options"></select>
     </div>
-    <div id="ingredientSelect">
-      <h3>Select Ingredient</h3>
-      <select
-        name="ingredientList"
-        id="ingredientList"
-        title="ingredientList"
-      ></select> -->
-    </div>
-    <div id="addRecipe">
-      <h2>Add Recipe</h2>
-      <input id="key" type="text" placeholder="Recipe Name" />
-      <input id="value" type="text" placeholder="Link to Recipe" />
-      <button onclick="addRecipe()">Add Recipe</button>
-    </div>
-    <div id="deleteRecipe">
-      <h2>Delete Recipe</h2>
-      <h3>Select Recipe</h3>
-      <select name="options" id="options" title="options"></select>
-      <br/><br/>
-      <button onclick="deleteRecipe()">Delete Recipe</button>
-    </div>
-    <div id="deleteIngredient">
-      <h2>Delete Ingredient</h2>
+    <!--TODO: add a delete from grocery list?-->
+    <div id="addList">
+      <h2>Add to Grocery List</h2>
       <h3>Select Ingredient</h3>
       <select
         name="ingredientList"
         id="ingredientList"
         title="ingredientList"
       ></select>
-      <br /><br />
-      <button onclick="deleteIngredient()">Delete Ingredient</button>
-    </div>
-    <p></p>
-    <!--TODO: add a delete from grocery list?-->
-    <div id="addList">
-      <h2>Add to Grocery List</h2>
-      <h3>Select Recipe</h3>
-      <select name="options" id="options" title="options"></select>
       <br /><br />
       <input id="listQuantity" type="text" placeholder="Quantity" />
       <button onclick="addToList()">Add Ingredient</button>
@@ -109,14 +76,37 @@
         <label for="kilograms">Kilograms (kg)</label><br />
       </form>
     </div>
-    <div id="addIngredient">
-      <h2>Add Ingredient</h2>
+    <div id="deleteIngredient">
+      <h2>Delete Ingredient</h2>
       <h3>Select Ingredient</h3>
       <select
         name="ingredientList"
         id="ingredientList"
         title="ingredientList"
       ></select>
+      <br /><br />
+      <button onclick="deleteIngredient()">Delete Ingredient</button>
+    </div>
+    <div id="addRecipe">
+      <h2>Add Recipe</h2>
+      <input id="key" type="text" placeholder="Recipe Name" />
+      <input id="value" type="text" placeholder="Link to Recipe" />
+      <button onclick="addRecipe()">Add Recipe</button>
+    </div>
+    <div id="deleteRecipe">
+      <h2>Delete Recipe</h2>
+      <h3>Select Recipe</h3>
+      <select name="recipeList" id="recipeList" title="recipeList"></select>
+      <br/><br/>
+      <button onclick="deleteRecipe()">Delete Recipe</button>
+    </div>
+    
+    <p></p>
+    
+    <div id="addIngredient">
+      <h2>Add Ingredient</h2>
+      <h3>Select Recipe</h3>
+      <select name="recipeList" id="recipeList" title="recipeList"></select>
       <br /><br />
       <input id="ingredient" type="text" placeholder="Ingredient" />
       <br /><br />
