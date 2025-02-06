@@ -33,70 +33,71 @@ function toggleElements() {
   const selectedOption = form.elements["toggle"].value;
 
   const elements = {
-      //recipeSelect: document.getElementById('recipeSelect'),
-      //ingredientSelect: document.getElementById('ingredientSelect'),
-      addRecipe: document.getElementById('addRecipe'),
-      deleteRecipe: document.getElementById('deleteRecipe'),
-      deleteIngredient: document.getElementById('deleteIngredient'),
-      addList: document.getElementById('addList'),
-      addIngredient: document.getElementById('addIngredient')
+    //recipeSelect: document.getElementById('recipeSelect'),
+    //ingredientSelect: document.getElementById('ingredientSelect'),
+    addRecipe: document.getElementById("addRecipe"),
+    deleteRecipe: document.getElementById("deleteRecipe"),
+    deleteIngredient: document.getElementById("deleteIngredient"),
+    addList: document.getElementById("addList"),
+    addIngredient: document.getElementById("addIngredient"),
   };
 
   for (const key in elements) {
-      if (elements.hasOwnProperty(key)) {
-          elements[key].classList.toggle('hidden', key !== selectedOption);
-      }
+    if (elements.hasOwnProperty(key)) {
+      elements[key].classList.toggle("hidden", key !== selectedOption);
+    }
   }
 }
 
 function updateOptions(selectValue = null, ingreListValue = null) {
-  const recipeSelectElements = document.querySelectorAll('select[name="recipeList"]');
-  const ingredientSelectElements = document.querySelectorAll('select[name="ingredientList"]');
+  const recipeSelectElements = document.querySelectorAll(
+    'select[name="recipeList"]'
+  );
+  const ingredientSelectElements = document.querySelectorAll(
+    'select[name="ingredientList"]'
+  );
 
   // Clear existing options in all recipe select elements
-  recipeSelectElements.forEach(select => {
-      while (select.firstChild) {
-          select.removeChild(select.firstChild);
-      }
+  recipeSelectElements.forEach((select) => {
+    while (select.firstChild) {
+      select.removeChild(select.firstChild);
+    }
   });
 
   // Clear existing options in all ingredient select elements
-  ingredientSelectElements.forEach(select => {
-      while (select.firstChild) {
-          select.removeChild(select.firstChild);
-      }
+  ingredientSelectElements.forEach((select) => {
+    while (select.firstChild) {
+      select.removeChild(select.firstChild);
+    }
   });
 
   // Populate recipe select elements with keys of recipes JSON object
-  recipeSelectElements.forEach(select => {
-      for (var key in recipes) {
-          var option = document.createElement("option");
-          option.text = key;
-          select.add(option);
-      }
+  recipeSelectElements.forEach((select) => {
+    for (var key in recipes) {
+      var option = document.createElement("option");
+      option.text = key;
+      select.add(option);
+    }
   });
 
   // Populate ingredient select elements with keys of ingredients JSON object
-  ingredientSelectElements.forEach(select => {
-      for (var key in ingredients) {
-          var option = document.createElement("option");
-          option.text = key;
-          select.add(option);
-      }
+  ingredientSelectElements.forEach((select) => {
+    for (var key in ingredients) {
+      var option = document.createElement("option");
+      option.text = key;
+      select.add(option);
+    }
   });
 
   // Set the value back to the initial value or the top value if it didn't have an initial value
-  recipeSelectElements.forEach(select => {
-      select.value = selectValue || select.options[0].value;
+  recipeSelectElements.forEach((select) => {
+    select.value = selectValue || select.options[0].value;
   });
 
-  ingredientSelectElements.forEach(select => {
-      select.value = ingreListValue || ingreList.options[0].value;
+  ingredientSelectElements.forEach((select) => {
+    select.value = ingreListValue || ingreList.options[0].value;
   });
 }
-
-
-
 
 // function updateOptions(selectValue = null, ingreListValue = null) {
 //   // Store the initial values
@@ -256,19 +257,71 @@ function addIngredient() {
 function getQuantity(amount = 0, unit = null) {
   //this is supposed to boil down the quantity of an ingredient based on the unit specified
   //use a switch statement
-
   //based on unit, we will know if it's solid or liquid
   //convert solids to grams, liquids to mililiters
   //do this for inputting groceries into list, and for deducting correct amount when making meal plan
+  let quantity;
+
+  switch (unit) {
+    //we boil the ingredients down to these units, so no conversion needed
+    case "indiv":
+    case "grams":
+    case "milliliters":
+      quantity = amount;
+      break;
+    case "ounces":
+      quantity = amount * 28.3495231;
+      break;
+    case "pounds":
+      quantity = amount * 453.59237;
+      break;
+    //same conversion method for both
+    case "kilograms":
+    case "liters":
+      quantity = amount * 1000;
+      break;
+    case "gallons":
+      quantity = amount * 3785.41178;
+      break;
+    case "fluid_ounces":
+      quantity = amount * 29.5735295;
+      break;
+  }
+
+  return quantity;
 }
 
 function addToList() {
+  const storeUnitForm = document.getElementById("storeUnit");
+
   var ingredient = document.getElementById("ingredientList");
   var quantity = document.getElementById("listQuantity").value;
+  var type = "";
+  var storeUnit = storeUnitForm.elements["unit"].value;
 
+  switch (storeUnit) {
+    case "indiv":
+      type = "indiv";
+      break;
+    case "grams":
+    case "ounces":
+    case "pounds":
+    case "kilograms":
+      type = "solid";
+      break;
+    case "milliliters":
+    case "liters":
+    case "gallons":
+    case "fluid_ounces":
+      type = "liquid";
+      break;
+  }
+
+  quantity = getQuantity(quantity, storeUnit)
+  //totalItems in theory would be a combo of all mL, g, and indiv. units, and they will be deducted in matching units, so it should be accurate, need to keep an eye on this
   totalItems += quantity;
 
-  groceryList[ingredient.value] = { quantity: quantity };
+  groceryList[ingredient.value] = { quantity: quantity, type: type };
 
   sessionStorage.setItem("groceryList", JSON.stringify(groceryList, null, 2));
 
@@ -317,6 +370,7 @@ function genMealPlan() {
         console.log(ingredient.name + " is in the grocery list.");
         totalItems -= ingredient.quantity; //deduct ingredient count from total count
         //todo: ensure deductions are made after all ingredients are verified
+        //todo: convert cups/spoons to g/ml here
       } else {
         //break loop if ingredient not in list or items run out
         break;

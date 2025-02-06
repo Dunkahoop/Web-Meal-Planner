@@ -59,9 +59,9 @@
       <br /><br />
       <input id="listQuantity" type="text" placeholder="Quantity" />
       <button onclick="addToList()">Add Ingredient</button>
-      <form>
-        <input type="radio" id="cups" name="unit" value="indiv" />
-        <label for="cups">Individual units</label><br />
+      <form id="storeUnit">
+        <input type="radio" id="indiv" name="unit" value="indiv" />
+        <label for="indiv">Individual units</label><br />
         <input type="radio" id="grams" name="unit" value="grams" />
         <label for="grams">Grams (g)</label><br />
         <input type="radio" id="milliliters" name="unit" value="milliliters" />
@@ -74,6 +74,10 @@
         <label for="pounds">Pounds (lbs)</label><br />
         <input type="radio" id="kilograms" name="unit" value="kilograms" />
         <label for="kilograms">Kilograms (kg)</label><br />
+        <input type="radio" id="gallons" name="unit" value="gallons" />
+        <label for="gallons">Gallons (gal)</label><br />
+        <input type="radio" id="fluid_ounces" name="unit" value="fluid_ounces" />
+        <label for="fluid_ounces">Fluid Ounces (fl oz)</label><br />
       </form>
     </div>
     <div id="deleteIngredient">
@@ -112,8 +116,8 @@
       <br /><br />
       <input id="quantity" type="text" placeholder="Total Quantity" />
       <form id="units">
-        <input type="radio" id="cups" name="unit" value="units" />
-        <label for="cups">Individual units</label><br />
+        <input type="radio" id="indiv" name="unit" value="indiv" />
+        <label for="indiv">Individual units</label><br />
         <input type="radio" id="cups" name="unit" value="cups" />
         <label for="cups">Cups</label><br />
         <input type="radio" id="tablespoons" name="unit" value="tablespoons" />
