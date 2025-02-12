@@ -1,5 +1,9 @@
 //TODO: add more warnings for incorrect input, pop up warnings
 
+//TODO: scrap ingredient cookie? or just reduce it to names
+
+//const version = 1.0;//TODO: this will be used for updating, helping to clean out old cookies that can't be used in new versions
+
 //Clear session storage
 window.onbeforeunload = function () {
   sessionStorage.clear();
@@ -11,7 +15,7 @@ var ingredients = JSON.parse(localStorage.getItem("ingredients")) || {};
 var groceryList = JSON.parse(sessionStorage.getItem("groceryList")) || {};
 
 // Get select element
-var select = document.getElementById("options");
+var select = document.getElementById("recipeList");
 var ingreList = document.getElementById("ingredientList");
 
 var totalItems = 0; //used as counter to stop program when no more items in grocery list
@@ -159,8 +163,8 @@ function addRecipe() {
 }
 
 function deleteRecipe() {
-  var options = document.getElementById("options");
-  var badRecipe = options.value;
+  var recipeList = document.getElementById("recipeList");
+  var badRecipe = recipeList.value;
   //localStorage.removeItem(badRecipe);
   delete recipes[badRecipe]; // Remove the recipe from the recipes object
   localStorage.setItem("recipes", JSON.stringify(recipes)); // Save the updated recipes
@@ -213,7 +217,7 @@ function addIngredient() {
 
   const unitForm = document.getElementById("units");
 
-  var options = document.getElementById("options");
+  var recipeList = document.getElementById("recipeList");
   var ingredient = document.getElementById("ingredient").value;
   var quantity = document.getElementById("quantity").value;
   var unit = unitForm.elements["unit"].value;
@@ -221,7 +225,7 @@ function addIngredient() {
   // Add new recipes
   if (ingredient && quantity)
     //ensure recipes is actually in box
-    recipes[options.value].ingredients.push({
+    recipes[recipeList.value].ingredients.push({
       name: ingredient,
       quantity: quantity,
       unit: unit,
@@ -317,7 +321,7 @@ function addToList() {
       break;
   }
 
-  quantity = getQuantity(quantity, storeUnit)
+  quantity = getQuantity(quantity, storeUnit);
   //totalItems in theory would be a combo of all mL, g, and indiv. units, and they will be deducted in matching units, so it should be accurate, need to keep an eye on this
   totalItems += quantity;
 
@@ -348,7 +352,7 @@ function genMealPlan() {
   //random code from:
   //https://stackoverflow.com/questions/30061969/select-random-object-from-json
   for (var i = 0; i < dayList.length; i++) {
-    let passed = false; //ensures all ingredients are in grocery list
+    let broken = false; //ensures all ingredients are in grocery list
 
     //get random recipe
     //TODO:
@@ -368,19 +372,27 @@ function genMealPlan() {
       if (groceryList[ingredient.name] && totalItems > 0) {
         //check if ingredient is in list and ensure list is not empty (may have entied from past days, may need to move up more)
         console.log(ingredient.name + " is in the grocery list.");
-        totalItems -= ingredient.quantity; //deduct ingredient count from total count
+        //totalItems -= ingredient.quantity; //deduct ingredient count from total count, needs to be calculated
         //todo: ensure deductions are made after all ingredients are verified
         //todo: convert cups/spoons to g/ml here
+        var quantity = convertUnits(
+          ingredient,
+          groceryList[ingredient.name].type
+        );
+        if (quantity < totalItems) totalItems -= quantity;
+        else {
+          broken = true;
+          break;
+        }
       } else {
         //break loop if ingredient not in list or items run out
+        broken = true;
         break;
       }
-
-      passed = true;
     }
 
     //render meal for day with website link
-    if (passed) {
+    if (!broken) {
       document.getElementById(mealId).innerHTML = recipes[rand_key].name;
       document.getElementById(webId).innerHTML =
         '<a href="' +
@@ -388,6 +400,42 @@ function genMealPlan() {
         '" target="_blank">Website</a>';
     }
   }
+}
+
+function convertUnits(ingredientRecipe = null, ingredientType = null) {
+  let quantity;
+  //TODO: figure this out
+  if (ingredientType == "indiv") {
+    quantity = ingredientRecipe.quantity;
+  } else if (ingredientType == "liquid") {
+    switch (ingredientRecipe.unit) {
+      case "cups":
+        quantity = ingredientRecipe.quantity * 236.588237;
+        break;
+      case "tablespoons":
+        quantity = ingredientRecipe.quantity * 14.7867648;
+        break;
+      case "teaspoons":
+        quantity = ingredientRecipe.quantity * 4.92892159;
+        break;
+    }
+  } else {
+    //solid
+    //NOTE: conversions are approximate, easier to program given that ingredients are user-generated and trying to account for all would be near impossible
+    switch (ingredientRecipe.unit) {
+      case "cups":
+        quantity = ingredientRecipe.quantity * 128;
+        break;
+      case "tablespoons":
+        quantity = ingredientRecipe.quantity * 16;
+        break;
+      case "teaspoons":
+        quantity = ingredientRecipe.quantity * 48;
+        break;
+    }
+  }
+
+  return quantity;
 }
 
 // Initial display of recipes
