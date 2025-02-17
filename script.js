@@ -11,7 +11,7 @@ window.onbeforeunload = function () {
 
 // Load recipes and ingredients from local storage or use default recipes
 var recipes = JSON.parse(localStorage.getItem("recipes")) || {};
-var ingredients = JSON.parse(localStorage.getItem("ingredients")) || {};
+var ingredients = JSON.parse(localStorage.getItem("ingredients")) || {};//delete?
 var groceryList = JSON.parse(sessionStorage.getItem("groceryList")) || {};
 
 // Get select element
@@ -222,12 +222,14 @@ function addIngredient() {
   var quantity = document.getElementById("quantity").value;
   var unit = unitForm.elements["unit"].value;
 
+  let quantityNum = parseFloat(quantity);
+
   // Add new recipes
   if (ingredient && quantity)
     //ensure recipes is actually in box
     recipes[recipeList.value].ingredients.push({
       name: ingredient,
-      quantity: quantity,
+      quantity: quantityNum,
       unit: unit,
     });
 
@@ -303,6 +305,7 @@ function addToList() {
   var type = "";
   var storeUnit = storeUnitForm.elements["unit"].value;
 
+
   switch (storeUnit) {
     case "indiv":
       type = "indiv";
@@ -321,11 +324,11 @@ function addToList() {
       break;
   }
 
-  quantity = getQuantity(quantity, storeUnit);
+  let quantityNum = getQuantity(parseFloat(quantity), storeUnit);
   //totalItems in theory would be a combo of all mL, g, and indiv. units, and they will be deducted in matching units, so it should be accurate, need to keep an eye on this
-  totalItems += quantity;
+  totalItems += quantityNum;
 
-  groceryList[ingredient.value] = { quantity: quantity, type: type };
+  groceryList[ingredient.value] = { quantity: quantityNum, type: type };
 
   sessionStorage.setItem("groceryList", JSON.stringify(groceryList, null, 2));
 
@@ -379,13 +382,14 @@ function genMealPlan() {
           ingredient,
           groceryList[ingredient.name].type
         );
-        if (quantity < totalItems) totalItems -= quantity;
+        if (quantity < groceryList[ingredient.name].quantity) groceryList[ingredient.name].quantity -= quantity;
         else {
           broken = true;
           break;
         }
       } else {
         //break loop if ingredient not in list or items run out
+        console.log(ingredient.name + " is not in the grocery list. loop broken.");
         broken = true;
         break;
       }
@@ -393,11 +397,16 @@ function genMealPlan() {
 
     //render meal for day with website link
     if (!broken) {
+      console.log(currentRecipe.name + " can be made.");
       document.getElementById(mealId).innerHTML = recipes[rand_key].name;
       document.getElementById(webId).innerHTML =
         '<a href="' +
         recipes[rand_key].website +
         '" target="_blank">Website</a>';
+    } else {
+      console.log(currentRecipe.name + " cannot be made.");
+      document.getElementById(mealId).innerHTML = "No meal possible.";
+      document.getElementById(webId).innerHTML = "";
     }
   }
 }

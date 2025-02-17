@@ -10,10 +10,8 @@
     <h1>Weekly Meal Planner</h1>
     <p>IMPORTANT!</p>
     <p>
-      The value of Quantity is ultimately up to how you use the app. Since many
-      units of measurement are used for cooking, I recommend judging how many
-      uses a package of ingredients typically gets you during regular cooking
-      when inputting your grocery list.
+      There are some units that I can't convert to grams (i.e. a pinch of salt, a dash of pepper). Please use your best judgement when adding these to the grocery list. For something like "One diced onion", I would recommend adding the ingredient as an individual unit
+      Also, the conversion of spoons and cups to grams is approximate, as many ingrtedients have different densities and accounting for all of them would be a lot of work and may make things more confusing.
     </p>
     <!-- <p>Also, to redo the plan with an empty grocery list, you need to close the page and reopen it. Please let me know if this is unintuitive, as I can add a feature where it clears upon refreshing the page.</p> -->
     <form id="toggleForm">
@@ -28,6 +26,10 @@
       <label>
         <input type="radio" name="toggle" value="deleteRecipe" onclick="toggleElements()">Delete Recipe
       </label>
+      <!--TODO: make the mode below where you can delete ingredients in a recipe-->
+      <!-- <label>
+        <input type="radio" name="toggle" value="editRecipe" onclick="toggleElements()">Edit Recipe
+      </label> -->
       <br/>
       <label>
         <input type="radio" name="toggle" value="deleteIngredient" onclick="toggleElements()">Delete Ingredient
