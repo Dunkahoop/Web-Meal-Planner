@@ -10,15 +10,36 @@ window.onbeforeunload = function () {
 };
 
 // Load recipes and ingredients from local storage or use default recipes
-var recipes = JSON.parse(localStorage.getItem("recipes")) || {};
-var ingredients = JSON.parse(localStorage.getItem("ingredients")) || {};//delete?
-var groceryList = JSON.parse(sessionStorage.getItem("groceryList")) || {};
+let recipes = {};
+let ingredients = {};//delete?
+let groceryList = {}; //sessionStorage.setItem("groceryList", JSON.stringify(groceryList));
+
+//JSON.parse(localStorage.getItem("recipes"))
+//JSON.parse(localStorage.getItem("ingredients"))
+//JSON.parse(sessionStorage.getItem("groceryList"))
+
+if("recipes" in localStorage) recipes = JSON.parse(localStorage.getItem("recipes"));
+else localStorage.setItem("recipes", JSON.stringify(recipes));
+
+if("ingredients" in localStorage) ingredients = JSON.parse(localStorage.getItem("ingredients"));
+else localStorage.setItem("ingredients", JSON.stringify(ingredients));
+
+//for debug purposes
+if("groceryList" in localStorage) groceryList = JSON.parse(localStorage.getItem("groceryList"));
+else localStorage.setItem("groceryList", JSON.stringify(groceryList));
+
+//if("groceryList" in sessionStorage) groceryList = JSON.parse(sessionStorage.getItem("groceryList"));
+
+//if (recipes === undefined) localStorage.setItem("recipes", JSON.stringify(recipes));
+//if (ingredients === undefined) localStorage.setItem("ingredients", JSON.stringify(ingredients));
+//if (groceryList === undefined) 
 
 // Get select element
 var select = document.getElementById("recipeList");
 var ingreList = document.getElementById("ingredientList");
 
-var totalItems = 0; //used as counter to stop program when no more items in grocery list
+//var totalItems = 0; //used as counter to stop program when no more items in grocery list
+let totalItems = 14; //for testing purposes
 
 const dayList = [
   ["meal1", "web1"],
@@ -53,12 +74,18 @@ function toggleElements() {
   }
 }
 
-function updateOptions(selectValue = null, ingreListValue = null) {
+function updateOptions(
+  selectValue = null,
+  ingreListValue = null,
+  recipeSelectName = "recipeList",
+  ingredientSelectName = "ingredientList"
+) {
+  //latter two args specify what element is to be selected initially by the dropdown, allows for ease of use
   const recipeSelectElements = document.querySelectorAll(
-    'select[name="recipeList"]'
+    `select[name="${recipeSelectName}"]`
   );
   const ingredientSelectElements = document.querySelectorAll(
-    'select[name="ingredientList"]'
+    `select[name="${ingredientSelectName}"]`
   );
 
   // Clear existing options in all recipe select elements
@@ -77,8 +104,8 @@ function updateOptions(selectValue = null, ingreListValue = null) {
 
   // Populate recipe select elements with keys of recipes JSON object
   recipeSelectElements.forEach((select) => {
-    for (var key in recipes) {
-      var option = document.createElement("option");
+    for (const key in recipes) {
+      const option = document.createElement("option");
       option.text = key;
       select.add(option);
     }
@@ -86,8 +113,8 @@ function updateOptions(selectValue = null, ingreListValue = null) {
 
   // Populate ingredient select elements with keys of ingredients JSON object
   ingredientSelectElements.forEach((select) => {
-    for (var key in ingredients) {
-      var option = document.createElement("option");
+    for (const key in ingredients) {
+      const option = document.createElement("option");
       option.text = key;
       select.add(option);
     }
@@ -99,9 +126,18 @@ function updateOptions(selectValue = null, ingreListValue = null) {
   });
 
   ingredientSelectElements.forEach((select) => {
-    select.value = ingreListValue || ingreList.options[0].value;
+    select.value = ingreListValue || select.options[0].value;
   });
+
+  // Update paragraph
+  document.getElementById("demo").innerHTML = JSON.stringify(recipes, null, 2);
+  document.getElementById("ingredients").innerHTML = JSON.stringify(
+    ingredients,
+    null,
+    2
+  );
 }
+
 
 // function updateOptions(selectValue = null, ingreListValue = null) {
 //   // Store the initial values
@@ -189,6 +225,7 @@ function deleteIngredient() {
 }
 
 function addIngredient() {
+  //TODO: make a function that allows user to change the unit of measurement for an ingredient, and edit ingredients in a recipe
   //TODO?: add number value for array?
   /* 
   Me:
@@ -242,6 +279,10 @@ function addIngredient() {
 
   console.log(ingredients[ingredient]);
 
+  //TODO:
+  //-keep initial selection in dropdown when adding ingredient
+  //-reset radio buttons after adding ingredient
+
   // Save recipes and ingredients to local storage
   localStorage.setItem("recipes", JSON.stringify(recipes));
   localStorage.setItem("ingredients", JSON.stringify(ingredients));
@@ -257,7 +298,7 @@ function addIngredient() {
   document.getElementById("ingredient").value = "";
   document.getElementById("quantity").value = "";
 
-  updateOptions();
+  updateOptions(recipeList.value);
 }
 
 function getQuantity(amount = 0, unit = null) {
@@ -359,8 +400,8 @@ function genMealPlan() {
 
     //get random recipe
     //TODO:
-    //-put this and other code in a while loop, runs until no more recipes left
-    //-tick off recipes when cannot be made
+    //-put this and other code in a while loop, runs until no more recipes left - done?
+    //-tick off recipes when cannot be made -done?
     var rand_key = obj_keys[Math.floor(Math.random() * obj_keys.length)];
 
     //elements in 2d array for display
